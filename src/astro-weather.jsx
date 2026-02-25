@@ -515,9 +515,10 @@ const CSS = `
 
   /* ── Layout ── */
   .container {
-    max-width: 980px;
+    max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
-    padding: 20px 16px 0;
+    padding: 20px 40px 0;
     position: relative;
     z-index: 1;
   }
@@ -571,7 +572,7 @@ const CSS = `
   /* ── Top info grid: desktop = 3 cols, tablet = 2 cols, mobile = 1 col ── */
   .top-grid {
     display: grid;
-    grid-template-columns: 1fr 160px 160px;
+    grid-template-columns: 1fr 200px 200px;
     gap: 14px;
     margin-bottom: 18px;
     align-items: start;
@@ -592,7 +593,7 @@ const CSS = `
   .day-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    gap: 10px;
     margin-top: 14px;
   }
   .day-card {
@@ -642,24 +643,13 @@ const CSS = `
     }
 
     .top-grid {
-      grid-template-columns: 1fr;
-    }
-    .conditions-card,
-    .moon-card,
-    .twilight-card {
-      grid-column: 1;
-    }
-
-    /* Moon + twilight side-by-side on small screens */
-    .moon-card, .twilight-card {
-      display: inline-grid;
-    }
-    .top-grid {
       grid-template-columns: 1fr 1fr;
     }
     .conditions-card {
       grid-column: 1 / -1;
     }
+    .moon-card     { grid-column: 1; }
+    .twilight-card { grid-column: 2; }
 
     .metrics-grid {
       grid-template-columns: 1fr 1fr;
@@ -675,16 +665,17 @@ const CSS = `
 
   /* ── Very small: ≤ 360px ── */
   @media (max-width: 360px) {
+    .top-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .conditions-card {
+      grid-column: 1 / -1;
+    }
+    .moon-card     { grid-column: 1; }
+    .twilight-card { grid-column: 2; }
+
     .day-grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-    .top-grid {
-      grid-template-columns: 1fr;
-    }
-    .conditions-card,
-    .moon-card,
-    .twilight-card {
-      grid-column: 1;
     }
   }
 `;
