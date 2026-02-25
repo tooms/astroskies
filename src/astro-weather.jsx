@@ -41,11 +41,16 @@ const SunCalc = {
   },
 };
 
-// ── Geocoding via Nominatim ───────────────────────────────────────────────────
+// ── Geocoding via local proxy (avoids Nominatim CORS block) ──────────────────
 async function geocode(query) {
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`;
-  const res = await fetch(url, { headers: { "Accept-Language": "en" } });
+  const res = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
   if (!res.ok) throw new Error("Geocoding failed");
+  return res.json();
+}
+
+async function reverseGeocode(lat, lon) {
+  const res = await fetch(`/api/geocode?lat=${lat}&lon=${lon}&reverse=1`);
+  if (!res.ok) throw new Error("Reverse geocoding failed");
   return res.json();
 }
 
@@ -245,16 +250,11 @@ export default function AstroWeather() {
       async ({ coords }) => {
         try {
           const { latitude: lat, longitude: lon } = coords;
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-            { headers: { "Accept-Language": "en" } }
-          );
-          const data = await res.json();
+          const data = await reverseGeocode(lat, lon);
           const parts = data.display_name?.split(",") ?? [];
           const name  = parts.slice(0, 3).join(",").trim() || `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
           setCity({ name, lat, lon });
         } catch {
-          // Reverse geocode failed — use coords with a numeric label
           const { latitude: lat, longitude: lon } = coords;
           setCity({ name: `${lat.toFixed(2)}, ${lon.toFixed(2)}`, lat, lon });
         } finally {
@@ -278,8 +278,8 @@ export default function AstroWeather() {
     setCivilData(null);
     try {
       const [ar, cr] = await Promise.all([
-        fetch(`/7timer/bin/api.pl?lon=${city.lon}&lat=${city.lat}&product=astro&output=json`),
-        fetch(`/7timer/bin/api.pl?lon=${city.lon}&lat=${city.lat}&product=civil&output=json`),
+        fetch(`/api/forecast?lat=${city.lat}&lon=${city.lon}&product=astro`),
+        fetch(`/api/forecast?lat=${city.lat}&lon=${city.lon}&product=civil`),
       ]);
       const [astro, civil] = await Promise.all([ar.json(), cr.json()]);
       setAstroData(astro);
