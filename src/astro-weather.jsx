@@ -271,6 +271,7 @@ export default function AstroWeather() {
   }, []);
 
   const load = useCallback(async () => {
+    if (!city) return;
     setLoading(true);
     setError(null);
     setAstroData(null);
@@ -330,7 +331,7 @@ export default function AstroWeather() {
   const now          = new Date();
   const moon         = SunCalc.getMoonIllumination(now);
   const moonInfo     = moonPhaseLabel(moon.phase);
-  const sunTimes     = SunCalc.getTimes(now, city.lat, city.lon);
+  const sunTimes     = city ? SunCalc.getTimes(now, city.lat, city.lon) : {};
   const current      = astroData?.dataseries?.[0];
   const currentCond  = current ? conditionLabel(cloudPct(current.cloudcover), current.seeing, current.transparency) : null;
   const currentTemp  = civilData?.dataseries?.[0]?.temp2m;
