@@ -337,7 +337,7 @@ export default function AstroWeather() {
   const currentTemp  = civilData?.dataseries?.[0]?.temp2m;
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#060a14 0%,#080d1e 60%,#050b16 100%)", fontFamily: "Outfit,sans-serif", color: "#c8d8ff", position: "relative", overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", width: "100%", background: "linear-gradient(160deg,#060a14 0%,#080d1e 60%,#050b16 100%)", fontFamily: "Outfit,sans-serif", color: "#c8d8ff", position: "relative", overflowX: "hidden" }}>
       <style>{CSS}</style>
 
       {/* Star field */}
@@ -521,6 +521,14 @@ const CSS = `
     padding: 20px 40px 0;
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
   }
 
   /* ── Header ── */
